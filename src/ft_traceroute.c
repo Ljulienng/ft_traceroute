@@ -37,7 +37,8 @@ struct addrinfo *resolve_destination(char *destination)
 	int err = getaddrinfo(destination, NULL, &hints, &res);
 	if (err != 0)
 	{
-		fprintf(stderr, "Error resolving destination: %s\n", gai_strerror(err));
+		// fprintf(stderr, "Error resolving destination: %s\n", gai_strerror(err));
+		ft_putstr_fd("traceroute: unknown host\n", 2);
 		return NULL;
 	}
 
