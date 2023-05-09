@@ -1,4 +1,5 @@
 #include "ft_traceroute.h"
+#include "libft.h"
 
 void print_result(struct timeval round_trip[ROUND_TRIP_COUNT], struct sockaddr_in *sender_addr, int ttl)
 {
@@ -11,9 +12,13 @@ void print_result(struct timeval round_trip[ROUND_TRIP_COUNT], struct sockaddr_i
 	printf(" %.3fms\n", (float)round_trip[2].tv_usec / 1000);
 }
 
-void clean_up(struct addrinfo *dest_info)
+void clean_up()
 {
-	freeaddrinfo(dest_info);
+	if (global_dest_info != NULL)
+	{
+		freeaddrinfo(global_dest_info);
+		global_dest_info = NULL;
+	}
 }
 
 void print_help()
@@ -69,4 +74,15 @@ void my_timersub(const struct timeval *a, const struct timeval *b, struct timeva
 		result->tv_sec -= 1;
 		result->tv_usec += 1000000;
 	}
+}
+
+void sigint_handler()
+{
+	if (global_dest_info != NULL)
+	{
+		freeaddrinfo(global_dest_info);
+		global_dest_info = NULL;
+	}
+	ft_putstr_fd("\nft_traceroute: Interrupted by user\n", 2);
+	exit(EXIT_FAILURE);
 }

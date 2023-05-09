@@ -1,9 +1,12 @@
 #include "ft_traceroute.h"
 #include "libft.h"
 
+struct addrinfo *global_dest_info = NULL;
+
 int main(int argc, char **argv)
 {
 	char *destination;
+	signal(SIGINT, sigint_handler);
 
 	if (process_arguments(argc, argv, &destination) == -1)
 	{
@@ -15,6 +18,7 @@ int main(int argc, char **argv)
 	{
 		return EXIT_FAILURE;
 	}
+	global_dest_info = dest_info;
 
 	printf("traceroute to %s (%s), %d hops max\n",
 		   destination,
@@ -22,7 +26,7 @@ int main(int argc, char **argv)
 		   MAX_HOPS);
 	perform_traceroute(dest_info);
 
-	clean_up(dest_info);
+	clean_up();
 
 	return EXIT_SUCCESS;
 }

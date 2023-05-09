@@ -12,6 +12,8 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <errno.h>
+#include <signal.h>
+
 #include <netinet/ip_icmp.h>
 
 #define MAX_HOPS 64
@@ -32,9 +34,12 @@ int process_arguments(int argc, char **argv, char **destination);
 struct addrinfo *resolve_destination(char *destination);
 void perform_traceroute(struct addrinfo *dest_info);
 void print_result(struct timeval round_trip[ROUND_TRIP_COUNT], struct sockaddr_in *sender_addr, int ttl);
-void clean_up(struct addrinfo *dest_info);
+void clean_up();
 ssize_t request_loop(t_info info, int ttl, struct timeval round_trip[ROUND_TRIP_COUNT]);
 uint16_t icmp_checksum(const void *data, size_t len);
 void my_timersub(const struct timeval *a, const struct timeval *b, struct timeval *result);
+void sigint_handler();
+
+extern struct addrinfo *global_dest_info;
 
 #endif
